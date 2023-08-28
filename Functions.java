@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.ArrayList;
 public class Functions {
     static double[][] PreencherMatrixDePontos(){
         Scanner sc = new Scanner(System.in);
@@ -39,31 +38,42 @@ public class Functions {
         sc.close();
         return matrixValores;
     }
-
     public static double method_Lagrange(double pontoInterpolador){
         double[][] matrixOfPoints = PreencherMatrixDePontos();
-        ArrayList<Double> coeficientesL = new ArrayList<Double>();
         int numOfPoints = matrixOfPoints[0].length;
         double resultInterpolacao = 0;
         for(int i =0; i < numOfPoints; i++){
-            double coeficiente = 1;
+            double coeficiente = matrixOfPoints[1][i];
             for(int j =0; j < matrixOfPoints[0].length; j++){
                 if(i != j){
-                    coeficiente *= pontoInterpolador-matrixOfPoints[0][j]/matrixOfPoints[0][i]-matrixOfPoints[0][j];
-                    coeficientesL.add(coeficiente);
+                    coeficiente *= (pontoInterpolador-matrixOfPoints[0][j])/(matrixOfPoints[0][i]-matrixOfPoints[0][j]);
                 }
             }
-            try {
-                resultInterpolacao += matrixOfPoints[1][i] * coeficientesL.get(i);
-            } catch (NullPointerException e) {
-                return resultInterpolacao;
-            }
+            resultInterpolacao += coeficiente;
         }
         return resultInterpolacao;
     }
+
     static double[] MetodoIterativoGauss(){
        double[][] equacoes = CriarEPreencherMatrixValoresSistema();
        double[] vetorResultado = new double[equacoes.length];
         return vetorResultado;
+    }
+
+    public static double method_Interpolation_Polinomial(double valorInterpolar){
+        double[][] matrixPontos = PreencherMatrixDePontos();
+        double resultInterpolacao = 0;
+        double[] xx = new double[matrixPontos[1].length];
+        for(int i = 0;i < xx.length; i++ ){
+            xx[i] = matrixPontos[1][i];
+        }
+        for (int i = 0; i < matrixPontos.length-1; i++) {
+            for (int j = 0; j < matrixPontos.length-1-i; j++) {
+                xx[j] = (valorInterpolar - matrixPontos[0][j]) / (matrixPontos[0][i + j + 1] - matrixPontos[0][j]) * xx[j + 1] + (valorInterpolar - matrixPontos[0][i + j + 1]) / (matrixPontos[0][j] - matrixPontos[0][i + j + 1]) * xx[j];
+            }
+            
+        }
+        resultInterpolacao = xx[0];
+        return resultInterpolacao;
     }
 }
