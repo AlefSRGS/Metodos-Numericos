@@ -63,17 +63,17 @@ public class Functions {
     public static double method_Interpolation_Polinomial(double valorInterpolar){
         double[][] matrixPontos = PreencherMatrixDePontos();
         double resultInterpolacao = 0;
-        double[] xx = new double[matrixPontos[1].length];
-        for(int i = 0;i < xx.length; i++ ){
-            xx[i] = matrixPontos[1][i];
+        double[] coeficientes = new double[matrixPontos[1].length];
+        for(int i = 0;i < coeficientes.length; i++ ){
+            coeficientes[i] = matrixPontos[1][i];
         }
         for (int i = 0; i < matrixPontos.length-1; i++) {
             for (int j = 0; j < matrixPontos.length-1-i; j++) {
-                xx[j] = (valorInterpolar - matrixPontos[0][j]) / (matrixPontos[0][i + j + 1] - matrixPontos[0][j]) * xx[j + 1] + (valorInterpolar - matrixPontos[0][i + j + 1]) / (matrixPontos[0][j] - matrixPontos[0][i + j + 1]) * xx[j];
+                coeficientes[j] = (valorInterpolar - matrixPontos[0][j]) / (matrixPontos[0][i + j + 1] - matrixPontos[0][j]) * coeficientes[j + 1] + (valorInterpolar - matrixPontos[0][i + j + 1]) / (matrixPontos[0][j] - matrixPontos[0][i + j + 1]) * coeficientes[j];
             }
-            
+
         }
-        resultInterpolacao = xx[0];
+        resultInterpolacao = coeficientes[0];
         return resultInterpolacao;
     }
 }
