@@ -1,7 +1,7 @@
 import java.util.Scanner;
-
+import java.util.ArrayList;
 public class Functions {
-    static void PreencherMatrixDePontos(double[][] matrix){
+    static double[][] PreencherMatrixDePontos(){
         Scanner sc = new Scanner(System.in);
         System.out.print("Insira o numero de pontos: ");
         int numOfPoints = sc.nextInt();
@@ -9,12 +9,13 @@ public class Functions {
         for(int column = 0; column<numOfPoints; column++){
             int line = 0;
             System.out.printf("insira o valor de X%d: ",column);
-            matrix[line][column] = sc.nextInt();
+            matrixOfPoints[line][column] = sc.nextDouble();
             line++;
             System.out.printf("insira o valor de Y%d: ",column);
-            matrix[line][column] = sc.nextInt();
+            matrixOfPoints[line][column] = sc.nextDouble();
         }
         sc.close();
+        return matrixOfPoints;
     }
     static double[][] CriarEPreencherMatrixValoresSistema(){
         Scanner sc = new Scanner(System.in);
@@ -39,17 +40,26 @@ public class Functions {
         return matrixValores;
     }
 
-    static double Method_Lagrange(double[][] matrixOfPoints, int numOfPoints, double pontoInterpolador){
-        PreencherMatrixDePontos(matrixOfPoints, numOfPoints);
-        double FunctionInterpolar = 0;
+    public static double method_Lagrange(double pontoInterpolador){
+        double[][] matrixOfPoints = PreencherMatrixDePontos();
+        ArrayList<Double> coeficientesL = new ArrayList<Double>();
+        int numOfPoints = matrixOfPoints[0].length;
+        double resultInterpolacao = 0;
         for(int i =0; i < numOfPoints; i++){
-            double L = 1;
-            for(int j =0; j < numOfPoints; j++){
-                L = L * (pontoInterpolador-matrixOfPoints[0][j])/(matrixOfPoints[0][i]-matrixOfPoints[0][j]);
+            double coeficiente = 1;
+            for(int j =0; j < matrixOfPoints[0].length; j++){
+                if(i != j){
+                    coeficiente *= pontoInterpolador-matrixOfPoints[0][j]/matrixOfPoints[0][i]-matrixOfPoints[0][j];
+                    coeficientesL.add(coeficiente);
+                }
             }
-            FunctionInterpolar = FunctionInterpolar + matrixOfPoints[1][i] * L;
+            try {
+                resultInterpolacao += matrixOfPoints[1][i] * coeficientesL.get(i);
+            } catch (NullPointerException e) {
+                return resultInterpolacao;
+            }
         }
-        return FunctionInterpolar;
+        return resultInterpolacao;
     }
     static double[] MetodoIterativoGauss(){
        double[][] equacoes = CriarEPreencherMatrixValoresSistema();
