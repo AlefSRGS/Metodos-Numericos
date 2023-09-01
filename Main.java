@@ -3,8 +3,8 @@ public class Main {
     static void menu(){
         Scanner sc = new Scanner(System.in);
         System.out.println("1 - Metodo de Lagrange.");
-        System.out.println("2 - Metodo de Gauss.");
         System.out.println("3 - Metodo Convencional Interpolação");
+        System.out.println("3 - Metodo de Gauss");
         System.out.println("0 - parar");
         System.out.print("Insira a opcao desejada: ");
         int optionMenu = sc.nextInt();
@@ -24,13 +24,13 @@ public class Main {
             System.out.printf("A funcao interpolar resultante é: %f\n",FunctionInterpolar);
         }
         if(option == 2){
-
-        }
-        if(option == 3){
             System.out.print("Digite o ponto interpolador: ");
             double pontoInterpolador = sc.nextDouble();
             double functionInterpolar = Functions.method_Interpolation_Polinomial(pontoInterpolador);
             System.out.printf("A funcao interpolar resultante é: %f\n",functionInterpolar);
+        }
+        if(option == 3){
+            
         }
         menu();
     }
