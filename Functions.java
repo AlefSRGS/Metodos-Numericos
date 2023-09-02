@@ -16,28 +16,6 @@ public class Functions {
         sc.close();
         return matrixOfPoints;
     }
-    static double[][] CriarEPreencherMatrixValoresSistema(){
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Ensira a grandeza do sistema: ");
-        int grandezaSistema = sc.nextInt();
-        System.out.println();
-        //matriz cujas linhas sao os valores de cada equação sendo a ultima coluna o resultado delas
-        double[][] matrixValores = new double[grandezaSistema][grandezaSistema+1];
-        for(int column = 0; column < matrixValores[0].length; column++){
-            //condicao para preencher o resultado dessas equacoes que se encontram na ultima coluna da matrix
-            for(int line = 0; line < matrixValores.length; line++ ){
-                if(column == matrixValores[0].length -1){
-                    System.out.printf("Insira o resultado da equacao %d: ", line+1);
-                    matrixValores[line][column] = sc.nextDouble();
-                    break;
-                }
-                System.out.printf("insira o valor %d da equacao %d: ", column, line);
-                matrixValores[line][column] = sc.nextDouble();
-            }
-        }
-        sc.close();
-        return matrixValores;
-    }
     public static double method_Lagrange(double pontoInterpolador){
         double[][] matrixOfPoints = PreencherMatrixDePontos();
         int numOfPoints = matrixOfPoints[0].length;
@@ -53,11 +31,51 @@ public class Functions {
         }
         return resultInterpolacao;
     }
+    public static void preencherMatrixValoresSistema(double[][] matrixValores, double[] termosIndependente){
+        Scanner sc = new Scanner(System.in);
+        for(int line = 0; line < matrixValores.length; line++){
+            for(int column = 0; column < matrixValores[0].length; column++ ){
+                System.out.printf("insira o valor %d da equacao %d: ", column+1, line+1);
+                matrixValores[line][column] = sc.nextDouble();
+            }
+            System.out.printf("Insira o valor da solução da equação %d: ", line+1);
+            termosIndependente[line] = sc.nextDouble();
+        }
+        sc.close();
+    }
+    
+    static double[] MetodoIterativoGaussJacobi(int grandezaSistema, double[][] matrixCoeficientes, double[] termosIndependentes, int iteractionMax, double tolerancia){
+        Scanner sc = new Scanner(System.in);
+        double[] vetorResultado = new double[grandezaSistema];
+        double[] vetorResultadoAnterior = new double[grandezaSistema];
+        for (int interation = 0; interation < iteractionMax; interation++) {
+            System.arraycopy(vetorResultado, 0, vetorResultadoAnterior, 0, interation);
 
-    static double[] MetodoIterativoGauss(){
-       double[][] equacoes = CriarEPreencherMatrixValoresSistema();
-       double[] vetorResultado = new double[equacoes.length];
-        return vetorResultado;
+            for (int i = 0; i < grandezaSistema; i++) {
+                double soma = termosIndependentes[i];
+                for (int j = 0; j < grandezaSistema; j++) {
+                    if(j != i){
+                        soma -= matrixCoeficientes[i][j] * vetorResultadoAnterior[j];
+                    }
+                }
+                vetorResultado[i] = soma / matrixCoeficientes[i][i];
+            }
+
+            //teste tolerancia para convergencia
+            double maxDiferencaResult = 0;
+            for (int i = 0; i < grandezaSistema; i++) {
+                double diferenca = Math.abs(vetorResultado[i] - vetorResultadoAnterior[i]);
+                if (diferenca > maxDiferencaResult) {
+                    maxDiferencaResult = diferenca;
+                }
+            }
+            if(maxDiferencaResult < tolerancia){
+                //convergencia dentro da tolerancia
+                return vetorResultado;
+            }
+        }
+        //nao conseguiu convergir dentro da iteração limite
+        return null;
     }
 
     public static double method_Interpolation_Polinomial(double valorInterpolar){
