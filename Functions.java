@@ -44,12 +44,13 @@ public class Functions {
         sc.close();
     }
     
-    static double[] MetodoIterativoGaussJacobi(int grandezaSistema, double[][] matrixCoeficientes, double[] termosIndependentes, int iteractionMax, double tolerancia){
+    static double[] metodoIterativoGaussJacobi(int grandezaSistema, double[][] matrixCoeficientes, double[] termosIndependentes, int iteractionMax, double tolerancia){
         Scanner sc = new Scanner(System.in);
         double[] vetorResultado = new double[grandezaSistema];
         double[] vetorResultadoAnterior = new double[grandezaSistema];
-        for (int interation = 0; interation < iteractionMax; interation++) {
-            System.arraycopy(vetorResultado, 0, vetorResultadoAnterior, 0, interation);
+        for (int iteration = 0; iteration < iteractionMax; iteration++) {
+            //copiar o conteudo do vetor resultado para o vetor resultado anterior
+            System.arraycopy(vetorResultado, 0, vetorResultadoAnterior, 0, grandezaSistema);
 
             for (int i = 0; i < grandezaSistema; i++) {
                 double soma = termosIndependentes[i];

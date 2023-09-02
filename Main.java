@@ -38,7 +38,13 @@ public class Main {
             double[][] equacoes = new double[grandezaSistema][grandezaSistema]; 
             double[] termosIndependentes = new double[grandezaSistema];
             Functions.preencherMatrixValoresSistema(equacoes, termosIndependentes);
-            System.out.println(Functions.MetodoIterativoGaussJacobi(interactionMax, grandezaSistema));
+            vetorResultado = Functions.metodoIterativoGaussJacobi(grandezaSistema, equacoes, termosIndependentes, interactionMax, grandezaSistema);
+            if(vetorResultado == null){
+                System.out.println("Sistema não convergiu dentro dos parametros desejados.");
+            }else{
+                System.out.println(vetorResultado);
+            }
+            
         }
         menu();
     }
