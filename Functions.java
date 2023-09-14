@@ -53,24 +53,29 @@ public class Functions {
             System.arraycopy(vetorResultado, 0, vetorResultadoAnterior, 0, grandezaSistema);
 
             for (int i = 0; i < grandezaSistema; i++) {
-                double soma = termosIndependentes[i];
+                double soma = 0;
                 for (int j = 0; j < grandezaSistema; j++) {
                     if(j != i){
-                        soma -= matrixCoeficientes[i][j] * vetorResultadoAnterior[j];
+                        soma += matrixCoeficientes[i][j] * vetorResultadoAnterior[j];
                     }
                 }
-                vetorResultado[i] = soma / matrixCoeficientes[i][i];
+                vetorResultado[i] = (termosIndependentes[i]-soma) / matrixCoeficientes[i][i];
             }
 
             //teste tolerancia para convergencia
-            double maxDiferencaResult = 0;
+            double NormaNum = 0;
+            double NormaDen = 0;
             for (int i = 0; i < grandezaSistema; i++) {
                 double diferenca = Math.abs(vetorResultado[i] - vetorResultadoAnterior[i]);
-                if (diferenca > maxDiferencaResult) {
-                    maxDiferencaResult = diferenca;
+                if (diferenca > NormaNum) {
+                    NormaNum = diferenca;
+                }
+                if(Math.abs(vetorResultado[i]) > NormaDen){
+                    NormaDen = Math.abs(vetorResultado[i]);
                 }
             }
-            if(maxDiferencaResult < tolerancia){
+            double normaRel = NormaNum/NormaDen;
+            if(normaRel <= tolerancia){
                 //convergencia dentro da tolerancia
                 return vetorResultado;
             }

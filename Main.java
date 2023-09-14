@@ -1,5 +1,10 @@
 import java.util.Scanner;
 public class Main {
+    static void printVetor(double[] vetor){
+        for (double d : vetor) {
+            System.out.println(d);
+        }
+    }
     static void menu(){
         Scanner sc = new Scanner(System.in);
         System.out.println("1 - Metodo de Lagrange.");
@@ -38,14 +43,14 @@ public class Main {
             double[][] equacoes = new double[grandezaSistema][grandezaSistema]; 
             double[] termosIndependentes = new double[grandezaSistema];
             Functions.preencherMatrixValoresSistema(equacoes, termosIndependentes);
-            vetorResultado = Functions.metodoIterativoGaussJacobi(grandezaSistema, equacoes, termosIndependentes, interactionMax, grandezaSistema);
+            vetorResultado = Functions.metodoIterativoGaussJacobi(grandezaSistema, equacoes, termosIndependentes, interactionMax, 0.001);
             if(vetorResultado == null){
                 System.out.println("Sistema não convergiu dentro dos parametros desejados.");
             }else{
-                System.out.println(vetorResultado);
+                printVetor(vetorResultado);
             }
-            
         }
+        
         menu();
     }
     public static void main(String[] args) {
