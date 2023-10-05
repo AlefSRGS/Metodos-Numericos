@@ -1,5 +1,6 @@
 import java.util.Scanner;
 public class Functions {
+
     static double[][] PreencherMatrixDePontos(){
         Scanner sc = new Scanner(System.in);
         System.out.print("Insira o numero de pontos: ");
@@ -31,6 +32,7 @@ public class Functions {
         }
         return resultInterpolacao;
     }
+
     public static void preencherMatrixValoresSistema(double[][] matrixValores, double[] termosIndependente){
         Scanner sc = new Scanner(System.in);
         for(int line = 0; line < matrixValores.length; line++){
@@ -53,13 +55,13 @@ public class Functions {
             System.arraycopy(vetorResultado, 0, vetorResultadoAnterior, 0, grandezaSistema);
 
             for (int i = 0; i < grandezaSistema; i++) {
-                double soma = 0;
+                double somaResultIntegral = 0;
                 for (int j = 0; j < grandezaSistema; j++) {
                     if(j != i){
-                        soma += matrixCoeficientes[i][j] * vetorResultadoAnterior[j];
+                        somaResultIntegral += matrixCoeficientes[i][j] * vetorResultadoAnterior[j];
                     }
                 }
-                vetorResultado[i] = (termosIndependentes[i]-soma) / matrixCoeficientes[i][i];
+                vetorResultado[i] = (termosIndependentes[i]-somaResultIntegral) / matrixCoeficientes[i][i];
             }
 
             //teste tolerancia para convergencia
@@ -100,4 +102,39 @@ public class Functions {
         resultInterpolacao = coeficientes[0];
         return resultInterpolacao;
     }
+
+    public static double trapesian_Method(int subRangeNumber, double inferiorLimit, double upperLimit){
+
+        // Calculando a largura do subintervalo
+        double subRangeWidth = (upperLimit - inferiorLimit) / subRangeNumber;
+
+        // Definindo os pontos x e calculando os correspondentes y = e^x
+        double[] pointsX = new double[subRangeNumber + 1];
+        double[] pointsY = new double[subRangeNumber + 1];
+        for (int i = 0; i <= subRangeNumber; i++) {
+            pointsX[i] = inferiorLimit + i * subRangeWidth;
+            pointsY[i] = Math.exp(pointsX[i]);
+        }
+
+        double somaResultIntegral = pointsY[0] + pointsY[subRangeNumber]; // soma dos extremos
+        
+        //soma dos internos
+        for (int i = 1; i < pointsX.length - 1; i++) {
+            somaResultIntegral += 2 * pointsY[i];
+        }
+
+        somaResultIntegral *= subRangeWidth / 2; // Multiplica pela largura do intervalo e divide por 2
+
+        return somaResultIntegral;
+    }
+
+    public static double trapesian_Method_Estimated_Error(int subRangeNumber, double inferiorLimit, double upperLimit) {
+        double subRangeWidth = (upperLimit - inferiorLimit) / subRangeNumber;
+
+        // A fórmula para o erro estimado no método dos trapézios é: -(b - a) * h^2 / 12
+        double estimatedError = -(upperLimit - inferiorLimit) * Math.pow(subRangeWidth, 2) / 12.0;
+
+        return estimatedError;
+    }
+
 }
